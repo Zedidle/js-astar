@@ -6,22 +6,21 @@
 }
 
 .default{
-	background-color: #999;
-
+	background-color: #CCC;
 }
 
-.start{
-	background-color: green;
+.obstacle{
+	background-color: #444;
 }
 
-.end{
-	background-color: red;
+.open{
+	background-color: #1f6fb5;
 }
 
-.wall{
-	background-color: blue;
+.close{
+	background-color: #9dd3fa;
 }
 
-.passed{
-	background-color: yellow;
+.result{
+	background-color: #Fcd692;
 }
