@@ -1,5 +1,5 @@
 let map = [];
-let  h = 100, w = 200;
+let  h = 200, w = 300;
 let start, end;
 
 if(true){

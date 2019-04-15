@@ -146,32 +146,45 @@ let AStarSearcher = function(map, start, end, renderer){
 		if(!this.showProgress){
 			console.time("Use time(ms)");
 		}
+
 		let couldFind = true;
 		let step = 0;
 		let cur = open.add(0, start.y, start.x, null);
-		(function lambda(){
-			step ++;
-			if(getDisToEnd(cur.y, cur.x) > 0){
+
+		if(showProgress){
+			(function lambda(){
+				step ++;
+				if(getDisToEnd(cur.y, cur.x) > 0){
+					close.add(cur.y, cur.x);
+					open.check(cur);
+					cur = open.getMinEstimate();
+					if(cur){
+						setTimeout(lambda, 4);
+					}else{
+						couldFind = false;
+					}
+				}
+			})();
+		}else{
+			while(getDisToEnd(cur.y, cur.x) > 0){
+				step ++;
 				close.add(cur.y, cur.x);
 				open.check(cur);
 				cur = open.getMinEstimate();
-				if(cur){
-					if(showProgress){
-						setTimeout(lambda, 4);
-					}else{
-						lambda();
-					}
-				}else{
+				if(!cur){
 					couldFind = false;
-				}
-			}else{
-				while(cur){
-					map[cur.y][cur.x] = "*";
-					renderer.changeDiv(cur.y, cur.x, 4);
-					cur = cur.pre;
+					break;
 				}
 			}
-		})();
+		}
+
+		if(couldFind){
+			while(cur){
+				map[cur.y][cur.x] = "*";
+				renderer.changeDiv(cur.y, cur.x, 4);
+				cur = cur.pre;
+			}
+		}
 
 		if(!this.showProgress){
 			console.timeEnd("Use time(ms)");
@@ -182,19 +195,6 @@ let AStarSearcher = function(map, start, end, renderer){
 			}
 		}
 	}
-
-
-	// function showMap(){
-	// 	console.clear();
-	// 	let string = "";
-	// 	for(let y=0;y<map.length;y++){
-	// 		for(let x=0;x<map[y].length;x++){
-	// 			string += map[y][x]+" ";
-	// 		}
-	// 		string += "\n";
-	// 	}
-	// 	console.log(string);
-	// }
 
 	function isObstacle(y, x){
 		if(map[y]){
