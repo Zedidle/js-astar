@@ -12,6 +12,8 @@ for(let i=0;i<testNumber;i++){
 
 var BinaryTree = function(nodeArr){
     this.root = null;
+    this.min = null;
+    this.max = null;
 
     this.getRoot = function(){
         return this.root;
@@ -19,19 +21,29 @@ var BinaryTree = function(nodeArr){
 
     this.getMin = function(){
         let cur = this.root;
-        while(cur.left){
-            cur = cur.left;
+        if(cur){
+            while(cur.left){
+                cur = cur.left;
+            }
+            this.min = cur;
+            return cur; 
+        }else{
+            return null;
         }
-        return cur; 
     },
 
     this.getMax = function(){
         let cur = this.root;
-        while(cur.right){
-            cur = cur.right;
+        if(cur){
+            while(cur.right){
+                cur = cur.right;
+            }
+            this.max = cur;
+            return cur;
+        }else{
+            return null;
         }
-        return cur;
-    }
+    },
 
     this.insertNode = function(node){
         if(typeof(node) === "number"){
@@ -110,7 +122,7 @@ var BinaryTree = function(nodeArr){
     }
 
     this.removeNode = function(val){
-        console.time("removeNode");
+        // console.time("removeNode");
         let pre = null;
         let isLeft = false;
         let cur = this.root;
@@ -157,17 +169,18 @@ var BinaryTree = function(nodeArr){
                 cur = null;
                 // console.timeEnd("removeNode");
                 return "remove success";
-            }
-            pre = cur;
-            if(cur.val > val){
-                cur = cur.left;
-                isLeft = true;
             }else{
-                cur = cur.right;
-                isLeft = false;
+                pre = cur;
+                if(cur.val > val){
+                    cur = cur.left;
+                    isLeft = true;
+                }else{
+                    cur = cur.right;
+                    isLeft = false;
+                }
             }
         }
-        console.timeEnd("removeNode");
+        // console.timeEnd("removeNode");
         return "remove fail";
     } 
 

@@ -24,3 +24,7 @@
 .result{
 	background-color: #Fcd692;
 }
+
+.start, .end {
+	background-color: #4CA;
+}

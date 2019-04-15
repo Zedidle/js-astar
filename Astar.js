@@ -1,5 +1,6 @@
 let AStarSearcher = function(map, start, end, renderer){
 	console.log("aStarSearch")
+	let self = this;
 	let close = {
 		_data:{},
 		contain(y, x){
@@ -27,7 +28,10 @@ let AStarSearcher = function(map, start, end, renderer){
 			}
 			this._data[y][x] = true;
 			map[y][x] = 3;
-			renderer.changeDiv(y, x, 3);
+			if(self.showProgress && !(y === start.y && x === start.x)){
+				renderer.changeDiv(y, x, 3);
+			}
+
 		},
 	};
 	let open = {
@@ -71,7 +75,9 @@ let AStarSearcher = function(map, start, end, renderer){
 				return false;
 			}else{
 				map[y][x] = 2;
-				renderer.changeDiv(y, x, 2);
+				if(self.showProgress && !(y === start.y && x === start.x)){
+					renderer.changeDiv(y, x, 2);
+				}
 				let estimateVal = toStart　+ getDisToEnd(y, x);
 				this.estimateTree.insertNode(estimateVal);
 				if(!this._data[estimateVal]){
@@ -121,26 +127,43 @@ let AStarSearcher = function(map, start, end, renderer){
 		getMinEstimate(){
 			/*
 				params void
-				return {
-					y, x, toStart, pre
-				}
+				return 
+					{ y, x, toStart, pre }
+					null
 			*/
 			let minEstimateNode = this.estimateTree.getMin();
-			return this.sub(minEstimateNode.val);
+			if(minEstimateNode){
+				return this.sub(minEstimateNode.val);
+			}else{
+				return null;
+			}
 		},
 	};
 
-	this.search = function(){
+	this.search = function(showProgress){
+		this.showProgress = Boolean(showProgress);
 		renderer.showMap();
-		let startTime = new Date().getTime();
+		if(!this.showProgress){
+			console.time("Use time(ms)");
+		}
+		let couldFind = true;
+		let step = 0;
 		let cur = open.add(0, start.y, start.x, null);
 		(function lambda(){
+			step ++;
 			if(getDisToEnd(cur.y, cur.x) > 0){
 				close.add(cur.y, cur.x);
 				open.check(cur);
 				cur = open.getMinEstimate();
-				// lambda();
-				setTimeout(lambda, 4);
+				if(cur){
+					if(showProgress){
+						setTimeout(lambda, 4);
+					}else{
+						lambda();
+					}
+				}else{
+					couldFind = false;
+				}
 			}else{
 				while(cur){
 					map[cur.y][cur.x] = "*";
@@ -149,8 +172,15 @@ let AStarSearcher = function(map, start, end, renderer){
 				}
 			}
 		})();
-		let endTime = new Date().getTime();
-		console.log(endTime - startTime)
+
+		if(!this.showProgress){
+			console.timeEnd("Use time(ms)");
+			if(!couldFind){
+				console.log("Can not find result!");
+			}else{
+				console.log("Use steps", step);
+			}
+		}
 	}
 
 
@@ -202,6 +232,10 @@ let Renderer = function(){
 				container.appendChild(div);
 			}
 		}
+		map[start.y][start.x] = 0;
+		map[end.y][end.x] = 0;
+		divMap[start.y][start.x].className = "start cube";
+		divMap[end.y][end.x].className = "end cube";
 		// console.log(divMap)
 	},
 	this.changeDiv = function(y, x, classIndex){
@@ -211,9 +245,4 @@ let Renderer = function(){
 
 let renderer = new Renderer();
 let aStarSearcher = new AStarSearcher(map, start, end, renderer);
-// renderer.showMap();
-aStarSearcher.search();
-
-// aStarSearch(map, start, end);
-
-
+aStarSearcher.search(false);
