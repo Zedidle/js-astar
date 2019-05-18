@@ -2,7 +2,7 @@ let map = [];
 let  h = 200, w = 300;
 let start, end;
 
-if(true){
+if(false){
 	for(let y=0;y<h;y++){
 		map[y] = [];
 		for(let x=0;x<w;x++){

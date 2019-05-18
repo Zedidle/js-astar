@@ -1,3 +1,4 @@
+const g_ShowProgress = true;
 let AStarSearcher = function(map, start, end, renderer){
 	console.log("aStarSearch")
 	let self = this;
@@ -245,4 +246,4 @@ let Renderer = function(){
 
 let renderer = new Renderer();
 let aStarSearcher = new AStarSearcher(map, start, end, renderer);
-aStarSearcher.search(false);
+aStarSearcher.search(g_ShowProgress);
