@@ -1,8 +1,10 @@
 let map = [];
-let  h = 200, w = 300;
+let  h = 80, w = 100;
 let start, end;
 
-if(false){
+const g_MarkRandomMap = true;
+
+if(g_MarkRandomMap){
 	for(let y=0;y<h;y++){
 		map[y] = [];
 		for(let x=0;x<w;x++){
@@ -19,8 +21,8 @@ if(false){
 	};
 }else{
 	start = {
-		y:9,
-		x:6,
+		y:11,
+		x:5,
 	};
 
 	end = {

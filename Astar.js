@@ -142,28 +142,29 @@ let AStarSearcher = function(map, start, end, renderer){
 	};
 
 	this.search = function(showProgress){
-		this.showProgress = Boolean(showProgress);
+		this.showProgress = showProgress;
 		renderer.showMap();
 		if(!this.showProgress){
 			console.time("Use time(ms)");
 		}
 
-		let couldFind = true;
 		let step = 0;
-		let cur = open.add(0, start.y, start.x, null);
+		cur = open.add(0, start.y, start.x, null);
 
 		if(showProgress){
 			(function lambda(){
-				step ++;
 				if(getDisToEnd(cur.y, cur.x) > 0){
+					step ++;
 					close.add(cur.y, cur.x);
 					open.check(cur);
 					cur = open.getMinEstimate();
-					if(cur){
-						setTimeout(lambda, 4);
+					if(!cur){
+						m_ShowWay(false);
 					}else{
-						couldFind = false;
+						setTimeout(lambda, 4);
 					}
+				}else{
+					m_ShowWay(true);
 				}
 			})();
 		}else{
@@ -173,28 +174,33 @@ let AStarSearcher = function(map, start, end, renderer){
 				open.check(cur);
 				cur = open.getMinEstimate();
 				if(!cur){
-					couldFind = false;
+					m_ShowWay(false);
 					break;
+				}
+			}
+			m_ShowWay(true);
+		}
+
+		function m_ShowWay(couldFind){
+			if(couldFind){
+				while(cur){
+					map[cur.y][cur.x] = "*";
+					renderer.changeDiv(cur.y, cur.x, 4);
+					cur = cur.pre;
+				}
+			}
+			if(!g_ShowProgress){
+				console.timeEnd("Use time(ms)");
+				if(!couldFind){
+					console.log("Can not find result!");
+				}else{
+					console.log("Use steps", step);
 				}
 			}
 		}
 
-		if(couldFind){
-			while(cur){
-				map[cur.y][cur.x] = "*";
-				renderer.changeDiv(cur.y, cur.x, 4);
-				cur = cur.pre;
-			}
-		}
 
-		if(!this.showProgress){
-			console.timeEnd("Use time(ms)");
-			if(!couldFind){
-				console.log("Can not find result!");
-			}else{
-				console.log("Use steps", step);
-			}
-		}
+
 	}
 
 	function isObstacle(y, x){
