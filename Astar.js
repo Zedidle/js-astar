@@ -1,4 +1,5 @@
-const g_ShowProgress = true;
+let g_ShowProgress = true;
+let g_Speed = 4;
 let AStarSearcher = function(map, start, end, renderer){
 	console.log("aStarSearch")
 	let self = this;
@@ -161,7 +162,7 @@ let AStarSearcher = function(map, start, end, renderer){
 					if(!cur){
 						m_ShowWay(false);
 					}else{
-						setTimeout(lambda, 4);
+						setTimeout(lambda, g_Speed);
 					}
 				}else{
 					m_ShowWay(true);
@@ -198,9 +199,6 @@ let AStarSearcher = function(map, start, end, renderer){
 				}
 			}
 		}
-
-
-
 	}
 
 	function isObstacle(y, x){
@@ -251,5 +249,62 @@ let Renderer = function(){
 }
 
 let renderer = new Renderer();
-let aStarSearcher = new AStarSearcher(map, start, end, renderer);
-aStarSearcher.search(g_ShowProgress);
+
+// aStarSearcher.search(g_ShowProgress);
+
+
+function RandomImmediately(){
+	let {start, end, map} = Map(true)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	aStarSearcher.search(false)
+}
+
+function RandomQuickly(){
+	let {start, end, map} = Map(true)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	g_Speed = 4;
+	aStarSearcher.search(true)
+}
+
+function RandomSlow(){
+	let {start, end, map} = Map(true)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	g_Speed = 50;
+	aStarSearcher.search(true)
+}
+
+function RandomVerySlow(){
+	let {start, end, map} = Map(true)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	g_Speed = 300;
+	aStarSearcher.search(true)
+}
+
+
+
+function MapImmediately(){
+	let {start, end, map} = Map(false)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	aStarSearcher.search(false)
+}
+
+function MapQuickly(){
+	let {start, end, map} = Map(false)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	g_Speed = 4;
+	aStarSearcher.search(true)
+}
+
+function MapSlow(){
+	let {start, end, map} = Map(false)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	g_Speed = 50;
+	aStarSearcher.search(true)
+}
+
+function MapVerySlow(){
+	let {start, end, map} = Map(false)
+	let aStarSearcher = new AStarSearcher(map, start, end, renderer);
+	g_Speed = 300;
+	aStarSearcher.search(true)
+}
